@@ -14,10 +14,12 @@ then
     exit 0
 fi
 
+# 调用xrandr获取显示器信息，使用sed提取
 params=$(xrandr --listmonitors|sed -e '1d' -e 's/^.* \<\([0-9]*\)\/.*x\([0-9]*\).*\>  \(\<.*\>\)$/--output \3 --mode \1x\2 --pos tokenx0/g' -e '1,2s/--mode/--primary --mode/g')
 x1=$(xrandr --listmonitors|sed -e '1d' -e 's/^.* \<\([0-9]*\)\/.*x.*$/\1 /g' -e '3,$d' -e 's/ //' )
 x2=$(xrandr --listmonitors|sed -e '1,2d' -e 's/^.* \<\([0-9]*\)\/.*$/\1 /g' -e 's/ //')
 
+# 拼接参数
 comm='xrandr'
 for p in $params
 do
@@ -34,6 +36,7 @@ else
     echo '1.左侧'
     echo '2.右侧'
     read v
+    # 忽略参数检查
     if [ v -eq 1]
     then
         pos='left'
