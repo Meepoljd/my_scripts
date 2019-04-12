@@ -14,7 +14,9 @@ then
     exit 0
 fi
 
-params=$(xrandr --listmonitors|sed -e '1d' -e 's/^.* \<\([0-9]*\)\/.*x\([0-9]*\).*\>  \(\<.*\>\)$/--output \3 --mode \1x\2 --pos tokenx0/g' -e '1,2s/--mode/--primary --mode/g' -e '1,2s/token/0/g')
+params=$(xrandr --listmonitors|sed -e '1d' -e 's/^.* \<\([0-9]*\)\/.*x\([0-9]*\).*\>  \(\<.*\>\)$/--output \3 --mode \1x\2 --pos tokenx0/g' -e '1,2s/--mode/--primary --mode/g')
+x1=$(xrandr --listmonitors|sed -e '1d' -e 's/^.* \<\([0-9]*\)\/.*x.*$/\1 /g' -e '3,$d' -e 's/ //' )
+x2=$(xrandr --listmonitors|sed -e '1,2d' -e 's/^.* \<\([0-9]*\)\/.*$/\1 /g' -e 's/ //')
 
 comm='xrandr'
 for p in $params
@@ -22,11 +24,31 @@ do
     comm=${comm}" "${p}
 done
 
+
 # 获取命令行参数
 if [ $# == 1 ]
 then
-
-    exit 0
+    pos=$1
 else
-    echo "参数错误"
+    echo '选择显示器位置:'
+    echo '1.左侧'
+    echo '2.右侧'
+    read v
+    if [ v -eq 1]
+    then
+        pos='left'
+    else
+        pos='right'
+    fi
 fi
+
+if [ $pos == "right" ]
+then
+    comm=${comm/token/0}
+    comm=${comm/token/$x1}
+else
+    comm=${comm/token/$x2}
+    comm=${comm/token/0}
+fi
+
+`$comm`
