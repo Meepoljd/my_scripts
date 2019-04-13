@@ -55,3 +55,16 @@ else
 fi
 
 `$comm`
+
+# 在i3wm中使用的polybar状态栏切换状态需要额外的配置
+killall -q polybar
+if [ $display -eq 1 ]
+then
+    polybar top &
+else
+    # 为外接显示器增强一个副状态栏
+    polybar top &
+    polybar second &
+fi
+
+feh --bg-fill "/home/michael/Pics/wh.jpg"
