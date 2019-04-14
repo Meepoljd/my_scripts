@@ -20,7 +20,10 @@ cd tmp
 for f in $("ls .")
 do
     target="sed -n 's/file:\(.*$f\)/\1/p'"
-    mv $f $target
+    if [ -n "$target" ]
+    then
+        mv $f $target
+    fi
 done
 cd ..
 rm -rf tmp
